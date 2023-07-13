@@ -20,4 +20,4 @@ const sunTimePromise = fetch(sunUrl)
     
 export {sunTimePromise};
 
-//test githuba actions
+//test github actions
