@@ -2,7 +2,6 @@ import axios from "axios";
 import { headers } from "./config.js";
 import { sunTimePromise } from "./sun.js";
 
-
 // Sunrise function
 const sunrise = async () => {
   const sunriseChange = {
@@ -12,7 +11,7 @@ const sunrise = async () => {
     data: {
       duration: 1,
       fast: false,
-      color: "#F39C12",
+      color: "hue:26.54 saturation:0.695 kelvin:3500",
       brightness: 0.4,
       power: "on",
     },
@@ -114,27 +113,57 @@ const bedtime = async () => {
   }
 };
 
-// Time check every minute and functions run according to if statements
-let checkInterval = setInterval(checkTime, 1000);
+// Time check every 10 minutes and functions run according to if statements
+let checkInterval = setInterval(checkTime, 600000);
 
 async function checkTime() {
+  //get current date and time
   const currentDate = new Date();
-  let time = currentDate.toLocaleTimeString();
-  // console.log({time});
+  let timeNow = currentDate.toLocaleTimeString();
+  //helper function to convert HH:MM:SS AM/PM to hours and minutes numbers only (24 Hour format)
+  function toHourMin(time) {
+    var [hour, min] = time.split(":").map(Number);
+    //  console.log(hour, min)
+    let new24Hour;
+    if (time.includes("PM") && hour < 12) {
+      new24Hour = hour + 12;
+      hour = new24Hour;
+    }
+    return { hour, min };
+  }
+  //helper function to compare number of minutes between current time and specified time
+  function timeDifference(compareHour, compareMin) {
+    return Math.abs(
+      (toHourMin(timeNow).hour - compareHour) * 60 +
+        (toHourMin(timeNow).min - compareMin)
+    );
+  }
+
   try {
     const sunTimeValue = await sunTimePromise;
-    // console.log(sunTimeValue.sunrise)
-    // console.log(sunTimeValue.sunset)
-    if (time === sunTimeValue.sunrise) {
+
+    // console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
+    //  console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
+    if (
+      timeDifference(
+        toHourMin(sunTimeValue.sunrise).hour,
+        toHourMin(sunTimeValue.sunrise).min
+      ) <= 10
+    ) {
       sunrise();
     }
-    if (time === "9:00:00 AM") {
+    if (timeDifference(9, 30) <= 10) {
       work();
     }
-    if (time === sunTimeValue.sunset) {
+    if (
+      timeDifference(
+        toHourMin(sunTimeValue.sunset).hour,
+        toHourMin(sunTimeValue.sunset).min
+      ) <= 10
+    ) {
       sunset();
     }
-    if (time === "11:00:00 PM") {
+    if (timeDifference(22, 0) <= 10) {
       bedtime();
     }
   } catch (error) {
@@ -143,4 +172,4 @@ async function checkTime() {
 }
 
 //To stop interval circuit
-clearInterval(checkInterval);
+//clearInterval(checkInterval);

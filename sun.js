@@ -1,3 +1,5 @@
+//Fetch from sunrise sunset API for todays times
+
 const latitude = -37.7673;
 const longitude = 144.9802;
 const sunUrl = `https://api.sunrisesunset.io/json?lat=${latitude}&lng=${longitude}`;
@@ -19,5 +21,6 @@ const sunTimePromise = fetch(sunUrl)
   //  console.log(sunTimeValue.sunset)
     
 export {sunTimePromise};
+
 
 //test github actions

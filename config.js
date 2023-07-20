@@ -7,7 +7,8 @@ const headers = {
   };
 export {headers};
 
-// functions below for finding out id number for lights and scenes
+// functions below for finding out details including light IDs and scene IDs
+
 // Details of all LIFX lights
 const listLights = {
   method: "GET",
@@ -18,7 +19,7 @@ const listLights = {
 axios
   .request(listLights)
   .then(function (response) {
-   console.log(response.data);
+//   console.log(response.data);
   })
   .catch(function (error) {
     console.error(error.response.data); 
