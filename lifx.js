@@ -120,7 +120,7 @@ async function checkTime() {
   //get current date and time
   const currentDate = new Date();
   let timeNow = currentDate.toLocaleTimeString();
-   console.log(toHourMin(timeNow))
+  // console.log(toHourMin(timeNow))
   //helper function to convert HH:MM:SS AM/PM to hours and minutes numbers only (24 Hour format)
   function toHourMin(time) {
     var [hour, min] = time.split(":").map(Number);
@@ -144,7 +144,7 @@ async function checkTime() {
     const sunTimeValue = await sunTimePromise;
 
     // console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
-      console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
+    //  console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
     if (
       timeDifference(
         toHourMin(sunTimeValue.sunrise).hour,
