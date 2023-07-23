@@ -114,7 +114,7 @@ const bedtime = async () => {
 };
 
 // Time check every 10 minutes and functions run according to if statements
-let checkInterval = setInterval(checkTime, 5000);
+let checkInterval = setInterval(checkTime, 600000);
 
 async function checkTime() {
   //get current date and time
