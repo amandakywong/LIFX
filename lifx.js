@@ -2,11 +2,34 @@ import axios from "axios";
 import { headers } from "./config.js";
 import { sunTimePromise } from "./sun.js";
 
-// Sunrise function
-const sunrise = async () => {
-  const sunriseChange = {
+// Sunrise function NO LOGNER IN USE
+// const sunrise = async () => {
+//   const sunriseChange = {
+//     method: "PUT",
+//     url: "https://api.lifx.com/v1/lights/id:d073d56e2210,id:d073d529bc2f,id:d073d5432b28/state",
+//     headers: headers,
+//     data: {
+//       duration: 1,
+//       fast: false,
+//       color: "hue:26.54 saturation:0.695 kelvin:3500",
+//       brightness: 0.4,
+//       power: "on",
+//     },
+//   };
+
+//   try {
+//     const response = await axios(sunriseChange);
+//     //console.log(response.data);
+//   } catch (error) {
+//     console.error("An error occurred with sunrise function:", error);
+//   }
+// };
+
+// Wake function
+const wake = async () => {
+  const wakeChange = {
     method: "PUT",
-    url: "https://api.lifx.com/v1/lights/id:d073d56e2210,id:d073d529bc2f,id:d073d5432b28/state",
+    url: "https://api.lifx.com/v1/lights/id:d073d56b5191/state",
     headers: headers,
     data: {
       duration: 1,
@@ -18,10 +41,10 @@ const sunrise = async () => {
   };
 
   try {
-    const response = await axios(sunriseChange);
+    const response = await axios(wakeChange);
     //console.log(response.data);
   } catch (error) {
-    console.error("An error occurred with sunrise function:", error);
+    console.error("An error occurred with wake function:", error);
   }
 };
 
@@ -29,7 +52,7 @@ const sunrise = async () => {
 const work = async () => {
   const offExceptOffice = {
     method: "PUT",
-    url: "https://api.lifx.com/v1/lights/id:d073d5432b28,id:d073d529bc2f,id:d073d56e2210/state",
+    url: "https://api.lifx.com/v1/lights/id:d073d56b5191/state",
     headers: headers,
     data: {
       power: "off",
@@ -48,13 +71,16 @@ const work = async () => {
     const response = await axios(offExceptOffice);
     //console.log(response.data);
   } catch (error) {
-    console.error("An error occurred with work function:", error);
+    console.error(
+      "An error occurred when turning off all lights for work function:",
+      error
+    );
   }
   try {
     const response = await axios(changeOffice);
     //console.log(response.data);
   } catch (error) {
-    console.error("An error occurred with work function for office:", error);
+    console.error("An error occurred when turning on office scene:", error);
   }
 };
 
@@ -62,7 +88,7 @@ const work = async () => {
 const sunset = async () => {
   const sunsetChange = {
     method: "PUT",
-    url: "https://api.lifx.com/v1/lights/id:d073d56e2210,id:d073d529bc2f/state",
+    url: "https://api.lifx.com/v1/lights/id:d073d56b5191,id:d073d56e2210/state",
     headers: headers,
     data: {
       duration: 1,
@@ -70,9 +96,9 @@ const sunset = async () => {
       color: "#F39C12",
       brightness: 0.4,
       power: "on",
-    },
+    }
   };
-  const sunsetChangeOfficeBedroom = {
+  const changeOfficeSunset = {
     method: "PUT",
     url: "https://api.lifx.com/v1/scenes/scene_id:99718963-31ae-4468-bb08-9bc40e36d33f/activate",
     headers: headers,
@@ -85,13 +111,13 @@ const sunset = async () => {
     const response = await axios(sunsetChange);
     //console.log(response.data);
   } catch (error) {
-    console.error("An error occurred with sunset function:", error);
+    console.error("An error occurred with living room sunset function:", error);
   }
   try {
-    const response = await axios(sunsetChangeOfficeBedroom);
+    const response = await axios(changeOfficeSunset);
     //console.log(response.data);
   } catch (error) {
-    console.error("An error occurred with sunset function for office:", error);
+    console.error("An error occurred with the office sunset function:", error);
   }
 };
 
@@ -113,8 +139,9 @@ const bedtime = async () => {
   }
 };
 
-// Time check every 10 minutes and functions run according to if statements
-let checkInterval = setInterval(checkTime, 600000);
+// Time check every 5 minutes and functions run according to if statements
+
+let checkInterval = setInterval(checkTime, 300000);
 
 async function checkTime() {
   //get current date and time
@@ -142,16 +169,13 @@ async function checkTime() {
 
   try {
     const sunTimeValue = await sunTimePromise;
-
+    // console.log(sunTimeValue)
     // console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
     //  console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
     if (
-      timeDifference(
-        toHourMin(sunTimeValue.sunrise).hour,
-        toHourMin(sunTimeValue.sunrise).min
-      ) <= 10
+      timeDifference(8,0) <= 10
     ) {
-      sunrise();
+      wake();
     }
     if (timeDifference(9, 30) <= 10) {
       work();
@@ -164,7 +188,7 @@ async function checkTime() {
     ) {
       sunset();
     }
-    if (timeDifference(23, 0) <= 10) {
+    if (timeDifference(23, 59) <= 10) {
       bedtime();
     }
   } catch (error) {

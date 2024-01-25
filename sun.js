@@ -16,9 +16,10 @@ const sunTimePromise = fetch(sunUrl)
   })
   .catch((error) => console.error("Error:", error));
 
- // const sunTimeValue = sunTimePromise;
-  //  console.log(sunTimeValue.sunrise)
-  //  console.log(sunTimeValue.sunset)
+  // const sunTimeValue = sunTimePromise;
+  // console.log(sunTimeValue)
+  // console.log(sunTimeValue.sunrise)
+  // console.log(sunTimeValue.sunset)
     
 export {sunTimePromise};
 
