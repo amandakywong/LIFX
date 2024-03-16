@@ -19,7 +19,7 @@ const listLights = {
 axios
   .request(listLights)
   .then(function (response) {
-  // console.log(response.data);
+  //  console.log(response.data);
   })
   .catch(function (error) {
     console.error(error.response.data); 
@@ -34,7 +34,7 @@ const getScenes = {
 axios
   .request(getScenes)
   .then(function (response) {
- //   console.log(response.data);
+    // console.log(response.data);
   })
   .catch(function (error) {
     console.error(error);

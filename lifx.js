@@ -60,7 +60,7 @@ const work = async () => {
   };
   const changeOffice = {
     method: "PUT",
-    url: "https://api.lifx.com/v1/scenes/scene_id:8dc00e56-c5b2-4290-91e6-c3c2e48d02aa/activate",
+    url: "https://api.lifx.com/v1/scenes/scene_id:6dad9aef-4022-44d0-a7c7-d9f8c0cd029e/activate",
     headers: headers,
     data: {
       duration: 1,
@@ -171,24 +171,24 @@ async function checkTime() {
     const sunTimeValue = await sunTimePromise;
     // console.log(sunTimeValue)
     // console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
-    //  console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
+    // console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
     if (
-      timeDifference(8,0) <= 10
+      timeDifference(8,0) <= 5
     ) {
       wake();
     }
-    if (timeDifference(9, 30) <= 10) {
+    if (timeDifference(9, 30) <= 5) {
       work();
     }
     if (
       timeDifference(
         toHourMin(sunTimeValue.sunset).hour,
         toHourMin(sunTimeValue.sunset).min
-      ) <= 10
+      ) <= 5
     ) {
       sunset();
     }
-    if (timeDifference(23, 59) <= 10) {
+    if (timeDifference(23, 59) <= 5) {
       bedtime();
     }
   } catch (error) {
@@ -197,4 +197,4 @@ async function checkTime() {
 }
 
 //To stop interval circuit
-//clearInterval(checkInterval);
+// clearInterval(checkInterval);
