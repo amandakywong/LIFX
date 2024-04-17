@@ -96,7 +96,7 @@ const sunset = async () => {
       color: "#F39C12",
       brightness: 0.4,
       power: "on",
-    }
+    },
   };
   const changeOfficeSunset = {
     method: "PUT",
@@ -141,7 +141,7 @@ const bedtime = async () => {
 
 // Time check every 5 minutes and functions run according to if statements
 
-let checkInterval = setInterval(checkTime, 300000);
+let checkInterval = setInterval(checkTime, 300);
 
 async function checkTime() {
   //get current date and time
@@ -166,15 +166,22 @@ async function checkTime() {
         (toHourMin(timeNow).min - compareMin)
     );
   }
-
+  //Fetch sunrise and sunset times at each interval
+  async function fetchSunTime() {
+    try {
+      const sunTimeValue = await sunTimePromise;
+      console.log(sunTimeValue)
+      console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
+      console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
+      return sunTimeValue;
+    } catch (error) {
+      console.error("An error occurred with sunTimePromise:", error);
+    }
+  }
+  //Invoke fetchSunTime to get updated times and perform actions based on time
   try {
-    const sunTimeValue = await sunTimePromise;
-    // console.log(sunTimeValue)
-    // console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
-    // console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
-    if (
-      timeDifference(8,0) <= 5
-    ) {
+    const sunTimeValue = await fetchSunTime();
+    if (timeDifference(8, 0) <= 5) {
       wake();
     }
     if (timeDifference(9, 30) <= 5) {
