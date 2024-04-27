@@ -1,6 +1,7 @@
 import axios from "axios";
 import { headers } from "./config.js";
-import { sunTimePromise } from "./sun.js";
+// import { sunTimePromise } from "./sun.js";
+import { fetchSunriseSunset } from "./sun.js";
 
 // Sunrise function NO LOGNER IN USE
 // const sunrise = async () => {
@@ -144,43 +145,41 @@ const bedtime = async () => {
 let checkInterval = setInterval(checkTime, 300000);
 
 async function checkTime() {
-  //get current date and time
-  const currentDate = new Date();
-  let timeNow = currentDate.toLocaleTimeString();
-  // console.log(toHourMin(timeNow))
-  //helper function to convert HH:MM:SS AM/PM to hours and minutes numbers only (24 Hour format)
-  function toHourMin(time) {
-    var [hour, min] = time.split(":").map(Number);
-    //  console.log(hour, min)
-    let new24Hour;
-    if (time.includes("PM") && hour < 12) {
-      new24Hour = hour + 12;
-      hour = new24Hour;
-    }
-    return { hour, min };
-  }
-  //helper function to compare number of minutes between current time and specified time
-  function timeDifference(compareHour, compareMin) {
-    return Math.abs(
-      (toHourMin(timeNow).hour - compareHour) * 60 +
-        (toHourMin(timeNow).min - compareMin)
-    );
-  }
-  //Fetch sunrise and sunset times at each interval
-  async function fetchSunTime() {
-    try {
-      const sunTimeValue = await sunTimePromise;
-      console.log(sunTimeValue)
-      console.log(toHourMin(sunTimeValue.sunrise).hour, toHourMin(sunTimeValue.sunrise).min)
-      console.log(toHourMin(sunTimeValue.sunset).hour, toHourMin(sunTimeValue.sunset).min)
-      return sunTimeValue;
-    } catch (error) {
-      console.error("An error occurred with sunTimePromise:", error);
-    }
-  }
-  //Invoke fetchSunTime to get updated times and perform actions based on time
   try {
-    const sunTimeValue = await fetchSunTime();
+    //get current date and time
+    const currentDate = new Date();
+    let timeNow = currentDate.toLocaleTimeString();
+    // console.log(toHourMin(timeNow))
+    //helper function to convert HH:MM:SS AM/PM to hours and minutes numbers only (24 Hour format)
+    function toHourMin(time) {
+      var [hour, min] = time.split(":").map(Number);
+      //  console.log(hour, min)
+      let new24Hour;
+      if (time.includes("PM") && hour < 12) {
+        new24Hour = hour + 12;
+        hour = new24Hour;
+      }
+      return { hour, min };
+    }
+    //helper function to compare number of minutes between current time and specified time
+    function timeDifference(compareHour, compareMin) {
+      return Math.abs(
+        (toHourMin(timeNow).hour - compareHour) * 60 +
+          (toHourMin(timeNow).min - compareMin)
+      );
+    }
+    //Fetch sunrise and sunset times at each interval
+    const sunTimeValue = await fetchSunriseSunset();
+    console.log(sunTimeValue);
+    console.log(
+      toHourMin(sunTimeValue.sunrise).hour,
+      toHourMin(sunTimeValue.sunrise).min
+    );
+    console.log(
+      toHourMin(sunTimeValue.sunset).hour,
+      toHourMin(sunTimeValue.sunset).min
+    );
+    //Invoke fetchSunTime to get updated times and perform actions based on time
     if (timeDifference(8, 0) <= 5) {
       wake();
     }
